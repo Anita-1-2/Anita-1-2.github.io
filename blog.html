@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Apex Growth Agency</title>
+
+  <!-- Same fonts as index.html for design consistency -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES
+       Identical tokens to index.html so both pages
+       share the same visual language.
+    ============================================= */
+    :root {
+      --bg-deep:    #0a0c12;
+      --bg-card:    #10131e;
+      --bg-surface: #161a28;
+      --gold:       #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim:   rgba(201,168,76,0.15);
+      --white:      #f4f2ee;
+      --muted:      #8a8fa8;
+      --border:     rgba(201,168,76,0.2);
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --radius:    12px;
+      --radius-lg: 20px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      --section-pad: clamp(60px, 8vw, 120px);
+      --container:   1200px;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Grain texture overlay — same as index.html */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: clamp(20px, 5vw, 60px);
+    }
+
+    /* Section label chip */
+    .section-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+      background: var(--gold-dim);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: #0a0c12;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 15px 32px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(201,168,76,0.3);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.88rem;
+      padding: 11px 22px;
+      border-radius: 6px;
+      border: 1px solid rgba(244,242,238,0.2);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Fade-up scroll animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* =============================================
+       NAVIGATION — identical to index.html
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 20px 0;
+      background: rgba(10,12,18,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .logo span { color: var(--gold); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--white); }
+    .nav-links a.active { color: var(--gold); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      padding: 24px 0 16px;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+    .mobile-menu a { font-size: 1rem; font-weight: 500; color: var(--muted); }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-menu.open { display: flex; }
+
+    /* =============================================
+       BLOG HERO / PAGE HEADER
+       Compact hero with page title, description,
+       and category filter pills.
+    ============================================= */
+    .blog-hero {
+      padding-top: 140px;
+      padding-bottom: 72px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* Radial gold glow behind hero */
+    .blog-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 500px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .blog-hero-inner { position: relative; z-index: 2; }
+
+    .blog-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .blog-hero h1 span { color: var(--gold); font-style: italic; }
+
+    .blog-hero p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-inline: auto;
+      line-height: 1.75;
+      margin-bottom: 48px;
+    }
+
+    /* ---- Category filter pills ---- */
+    .category-filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cat-pill {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 9px 20px;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-body);
+    }
+    .cat-pill:hover,
+    .cat-pill.active {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* =============================================
+       FEATURED POST
+       Full-width hero card for the top article.
+    ============================================= */
+    .featured-section {
+      padding-bottom: var(--section-pad);
+    }
+
+    .featured-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 420px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .featured-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+      transform: translateY(-4px);
+    }
+
+    /* Left visual panel */
+    .featured-visual {
+      background: linear-gradient(135deg, #0d1a0d 0%, #1a2a1a 50%, #0a1a10 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 320px;
+    }
+
+    /* Decorative concentric circles in visual */
+    .featured-visual::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 50%;
+    }
+    .featured-visual::after {
+      content: '';
+      position: absolute;
+      width: 180px; height: 180px;
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 50%;
+    }
+
+    .featured-emoji {
+      font-size: 5rem;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 0 30px rgba(201,168,76,0.3));
+    }
+
+    /* Right content panel */
+    .featured-content {
+      padding: 48px 48px 48px 52px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .post-category {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      padding: 5px 14px;
+      border-radius: 50px;
+      background: var(--gold-dim);
+    }
+
+    .post-date {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .post-read-time {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .post-read-time::before { content: "· "; }
+
+    .featured-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .featured-excerpt {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .read-more-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 0.04em;
+      transition: gap var(--transition);
+    }
+    .read-more-link:hover { gap: 14px; }
+
+    /* =============================================
+       BLOG GRID
+       3-column responsive card grid for all posts.
+    ============================================= */
+    .blog-grid-section {
+      padding-bottom: var(--section-pad);
+    }
+
+    .blog-grid-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .blog-grid-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .blog-grid-title span { color: var(--gold); }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* Individual blog post card */
+    .blog-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .blog-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 56px rgba(0,0,0,0.35);
+    }
+
+    /* Colored top thumbnail area */
+    .card-thumb {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .thumb-1 { background: linear-gradient(135deg, #1a1520, #2a1040); }
+    .thumb-2 { background: linear-gradient(135deg, #0d1520, #102040); }
+    .thumb-3 { background: linear-gradient(135deg, #1a1000, #2a2000); }
+    .thumb-4 { background: linear-gradient(135deg, #0d1a0d, #1a3010); }
+    .thumb-5 { background: linear-gradient(135deg, #1a0d10, #2a1020); }
+    .thumb-6 { background: linear-gradient(135deg, #101520, #1a2535); }
+
+    .card-thumb-emoji {
+      font-size: 3rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Subtle diagonal line decoration on thumbs */
+    .card-thumb::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 100px; height: 100px;
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 50%;
+    }
+
+    .card-body {
+      padding: 28px 26px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .card-category {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .card-date {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .card-date::before { content: "· "; }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+
+    .card-excerpt {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 22px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .author-dot {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .dot-a { background: linear-gradient(135deg, #c9a84c, #7a5c00); color: #000; }
+    .dot-b { background: linear-gradient(135deg, #4c7ac9, #003a7a); color: #fff; }
+    .dot-c { background: linear-gradient(135deg, #4cc97a, #007a3a); color: #000; }
+    .dot-d { background: linear-gradient(135deg, #c94c7a, #7a0030); color: #fff; }
+
+    .author-info-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .author-info-read {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .card-arrow {
+      color: var(--gold);
+      font-size: 1rem;
+      transition: transform var(--transition);
+    }
+    .blog-card:hover .card-arrow { transform: translateX(6px); }
+
+    /* =============================================
+       NEWSLETTER SECTION
+       Full-width CTA strip to subscribe.
+    ============================================= */
+    .newsletter-section {
+      padding-block: var(--section-pad);
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background decorative ring */
+    .newsletter-section::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: -200px;
+      transform: translateY(-50%);
+      width: 500px; height: 500px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .newsletter-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .newsletter-text h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .newsletter-text h2 span { color: var(--gold); font-style: italic; }
+    .newsletter-text p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .newsletter-input-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .newsletter-input::placeholder { color: rgba(138,143,168,0.5); }
+    .newsletter-input:focus { border-color: var(--gold); }
+
+    .newsletter-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* =============================================
+       FOOTER — same as index.html
+    ============================================= */
+    footer {
+      background: var(--bg-deep);
+      border-top: 1px solid var(--border);
+      padding-block: 64px 32px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+
+    .footer-brand .logo { margin-bottom: 16px; }
+    .footer-brand p {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: var(--transition);
+    }
+    .social-link:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .footer-col h4 {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul a {
+      font-size: 0.88rem;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+    .footer-col ul a:hover { color: var(--white); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-copy { font-size: 0.82rem; color: var(--muted); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a {
+      font-size: 0.82rem;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+    .footer-legal a:hover { color: var(--gold); }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 1024px) {
+      .featured-card { grid-template-columns: 1fr; }
+      .featured-visual { min-height: 220px; }
+      .blog-grid { grid-template-columns: repeat(2, 1fr); }
+      .newsletter-inner { grid-template-columns: 1fr; gap: 40px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .newsletter-input-row { flex-direction: column; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .blog-grid-header { flex-direction: column; align-items: flex-start; }
+      .featured-content { padding: 32px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAVIGATION
+       Same nav as index.html. "Blog" link is marked
+       .active so users know which page they're on.
+  ============================================= -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+
+        <!-- Logo links back to home -->
+        <a href="index.html" class="logo">Apex<span>Growth</span></a>
+
+        <!-- Desktop nav — Blog is highlighted as active -->
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="index.html#testimonials">About</a></li>
+          <li><a href="blog.html" class="active">Blog</a></li>
+          <li><a href="index.html#contact" class="btn-primary" style="padding: 10px 22px; font-size: 0.83rem;">Get Started</a></li>
+        </ul>
+
+        <!-- Mobile hamburger -->
+        <div class="hamburger" onclick="toggleMenu()" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Mobile dropdown -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" onclick="toggleMenu()">Home</a>
+        <a href="index.html#services" onclick="toggleMenu()">Services</a>
+        <a href="index.html#testimonials" onclick="toggleMenu()">About</a>
+        <a href="blog.html" onclick="toggleMenu()">Blog</a>
+        <a href="index.html#contact" onclick="toggleMenu()">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- =============================================
+       BLOG HERO / PAGE HEADER
+       Title, description, and category filter pills.
+  ============================================= -->
+  <section class="blog-hero">
+    <div class="container">
+      <div class="blog-hero-inner">
+        <span class="section-label">The Apex Blog</span>
+        <h1>Insights That <span>Grow</span><br />Your Business</h1>
+        <p>
+          Strategy, tactics, and real-world lessons from working with 180+ businesses
+          across five of the fastest-growing industries.
+        </p>
+
+        <!-- Category filter pills — JS filters visible cards -->
+        <div class="category-filters">
+          <button class="cat-pill active" onclick="filterPosts('all', this)">All Posts</button>
+          <button class="cat-pill" onclick="filterPosts('real-estate', this)">Real Estate</button>
+          <button class="cat-pill" onclick="filterPosts('fitness', this)">Fitness</button>
+          <button class="cat-pill" onclick="filterPosts('tech', this)">AI & Tech</button>
+          <button class="cat-pill" onclick="filterPosts('education', this)">Online Courses</button>
+          <button class="cat-pill" onclick="filterPosts('events', this)">Events</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       FEATURED POST
+       The top/latest article shown prominently.
+  ============================================= -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="featured-card fade-up" data-category="real-estate">
+
+        <!-- Left visual panel -->
+        <div class="featured-visual">
+          <span class="featured-emoji">🏢</span>
+        </div>
+
+        <!-- Right content -->
+        <div class="featured-content">
+          <div class="post-meta">
+            <span class="post-category">Real Estate</span>
+            <span class="post-date">January 28, 2025</span>
+            <span class="post-read-time">8 min read</span>
+          </div>
+          <h2 class="featured-title">
+            The 5-Step Lead Generation System That Helped Meridian Realty Close 11 Deals in One Month
+          </h2>
+          <p class="featured-excerpt">
+            Most real estate agents are burning ad budget with no system behind it.
+            We break down the exact funnel architecture, audience targeting strategy,
+            and follow-up sequence that turned a 3-closing-per-month team into an 11-deal machine — in under 90 days.
+          </p>
+          <a href="#" class="read-more-link">
+            Read Full Article <span>→</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       BLOG POST GRID
+       6 article cards across 3 columns.
+       Each has a data-category for JS filtering.
+  ============================================= -->
+  <section class="blog-grid-section">
+    <div class="container">
+
+      <div class="blog-grid-header fade-up">
+        <h2 class="blog-grid-title">Latest <span>Articles</span></h2>
+        <div style="display:flex; gap: 12px; align-items: center;">
+          <span style="font-size: 0.82rem; color: var(--muted);">Sort by:</span>
+          <select style="background: var(--bg-card); border: 1px solid var(--border); color: var(--white); padding: 8px 14px; border-radius: 6px; font-family: var(--font-body); font-size: 0.82rem; outline: none; cursor: pointer;">
+            <option>Most Recent</option>
+            <option>Most Popular</option>
+            <option>Quickest Reads</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 6 blog post cards -->
+      <div class="blog-grid" id="blogGrid">
+
+        <!-- Post 1: Fitness -->
+        <div class="blog-card fade-up delay-1" data-category="fitness">
+          <div class="card-thumb thumb-1">
+            <span class="card-thumb-emoji">💪</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-category">Fitness</span>
+              <span class="card-date">Feb 10, 2025</span>
+            </div>
+            <h3 class="card-title">How Personal Trainers Can Fill Their Calendar with Qualified Clients Using Instagram Reels</h3>
+            <p class="card-excerpt">Stop posting and praying. Here's a repeatable Reels framework that generates DM inquiries every single week without paying for ads.</p>
+            <div class="card-footer">
+              <div class="card-author">
+                <div class="author-dot dot-a">MR</div>
+                <div>
+                  <div class="author-info-name">Marcus Reed</div>
+                  <div class="author-info-read">6 min read</div>
+                </div>
+              </div>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 2: AI & Tech -->
+        <div class="blog-card fade-up delay-2" data-category="tech">
+          <div class="card-thumb thumb-2">
+            <span class="card-thumb-emoji">🤖</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-category">AI & Tech</span>
+              <span class="card-date">Feb 5, 2025</span>
+            </div>
+            <h3 class="card-title">Why Most AI Startups Fail at Marketing (And the 3 Things That Actually Work)</h3>
+            <p class="card-excerpt">Technical founders often underestimate go-to-market. We've worked with 30+ tech startups — here's the playbook that generates real pipeline.</p>
+            <div class="card-footer">
+              <div class="card-author">
+                <div class="author-dot dot-b">LP</div>
+                <div>
+                  <div class="author-info-name">Lena Park</div>
+                  <div class="author-info-read">9 min read</div>
+                </div>
+              </div>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 3: Online Courses -->
+        <div class="blog-card fade-up delay-3" data-category="education">
+          <div class="card-thumb thumb-3">
+            <span class="card-thumb-emoji">🎓</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-category">Online Courses</span>
+              <span class="card-date">Jan 29, 2025</span>
+            </div>
+            <h3 class="card-title">The Course Launch Formula: From Zero to 1,000 Students in 30 Days</h3>
+            <p class="card-excerpt">We've launched over 40 online courses. This is the exact pre-launch, launch week, and post-launch sequence that consistently hits four figures on day one.</p>
+            <div class="card-footer">
+              <div class="card-author">
+                <div class="author-dot dot-c">AJ</div>
+                <div>
+                  <div class="author-info-name">Aisha Johnson</div>
+                  <div class="author-info-read">11 min read</div>
+                </div>
+              </div>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 4: Events -->
+        <div class="blog-card fade-up delay-1" data-category="events">
+          <div class="card-thumb thumb-4">
+            <span class="card-thumb-emoji">🎤</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-category">Events</span>
+              <span class="card-date">Jan 22, 2025</span>
+            </div>
+            <h3 class="card-title">Selling Out Your Conference: A Digital Marketing Blueprint for Event Organizers</h3>
+            <p class="card-excerpt">Ticket sales don't happen by accident. Learn the 90-day campaign structure, retargeting ladder, and urgency triggers that fill seats fast.</p>
+            <div class="card-footer">
+              <div class="card-author">
+                <div class="author-dot dot-d">TW</div>
+                <div>
+                  <div class="author-info-name">Tyler Walsh</div>
+                  <div class="author-info-read">7 min read</div>
+                </div>
+              </div>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 5: Real Estate -->
+        <div class="blog-card fade-up delay-2" data-category="real-estate">
+          <div class="card-thumb thumb-5">
+            <span class="card-thumb-emoji">🏡</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-category">Real Estate</span>
+              <span class="card-date">Jan 15, 2025</span>
+            </div>
+            <h3 class="card-title">Google Ads vs. Facebook Ads for Real Estate Agents: Which Delivers Better ROI in 2025?</h3>
+            <p class="card-excerpt">After managing $2M+ in real estate ad spend, we have the data. Here's our definitive answer — and why the right answer depends on your market.</p>
+            <div class="card-footer">
+              <div class="card-author">
+                <div class="author-dot dot-a">MR</div>
+                <div>
+                  <div class="author-info-name">Marcus Reed</div>
+                  <div class="author-info-read">10 min read</div>
+                </div>
+              </div>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 6: Fitness -->
+        <div class="blog-card fade-up delay-3" data-category="fitness">
+          <div class="card-thumb thumb-6">
+            <span class="card-thumb-emoji">🏋️</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="card-category">Fitness</span>
+              <span class="card-date">Jan 8, 2025</span>
+            </div>
+            <h3 class="card-title">Building a $10K/Month Online Coaching Business: The Marketing Stack You Actually Need</h3>
+            <p class="card-excerpt">You don't need 10 tools. You need three working together. Here's the lean marketing stack we install for every fitness coach we work with.</p>
+            <div class="card-footer">
+              <div class="card-author">
+                <div class="author-dot dot-b">LP</div>
+                <div>
+                  <div class="author-info-name">Lena Park</div>
+                  <div class="author-info-read">8 min read</div>
+                </div>
+              </div>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end blog-grid -->
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       NEWSLETTER SECTION
+       Email capture strip — encourages readers
+       to subscribe for more content.
+  ============================================= -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-inner">
+
+        <!-- Left text -->
+        <div class="fade-up">
+          <span class="section-label">Stay Sharp</span>
+          <h2 class="newsletter-text"><h2 style="font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 900; line-height: 1.2; margin-bottom: 14px;">Get <span style="color: var(--gold); font-style: italic;">Growth Insights</span><br />Every Tuesday</h2></h2>
+          <p style="font-size: 0.95rem; color: var(--muted); line-height: 1.7;">
+            No fluff. No spam. Just one actionable growth strategy delivered to your inbox
+            every week — from the team behind $24M in client revenue.
+          </p>
+        </div>
+
+        <!-- Right form -->
+        <div class="fade-up delay-2">
+          <div class="newsletter-form">
+            <div class="newsletter-input-row">
+              <input type="email" class="newsletter-input" placeholder="Enter your email address" id="nlEmail" />
+              <button class="btn-primary" onclick="subscribeNewsletter()" style="white-space: nowrap;">
+                Subscribe →
+              </button>
+            </div>
+            <p class="newsletter-note">
+              🔒 No spam, ever. Unsubscribe in one click. Join 3,400+ subscribers.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       FOOTER — same structure as index.html
+  ============================================= -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">Apex<span>Growth</span></a>
+          <p>A specialist digital growth agency for five high-growth industries. We build systems that scale businesses beyond plateaus.</p>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="social-link" aria-label="Instagram">ig</a>
+            <a href="#" class="social-link" aria-label="YouTube">▶</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="index.html#services">Paid Advertising</a></li>
+            <li><a href="index.html#services">SEO & Content</a></li>
+            <li><a href="index.html#services">Brand Identity</a></li>
+            <li><a href="index.html#services">Funnel & CRO</a></li>
+            <li><a href="index.html#services">Email Automation</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Industries</h4>
+          <ul>
+            <li><a href="index.html#industries">Real Estate</a></li>
+            <li><a href="index.html#industries">Fitness & Training</a></li>
+            <li><a href="index.html#industries">AI & Tech</a></li>
+            <li><a href="index.html#industries">Online Courses</a></li>
+            <li><a href="index.html#industries">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#case-studies">Case Studies</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2025 Apex Growth Agency. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- =============================================
+       JAVASCRIPT
+       1. Mobile nav toggle
+       2. Category filter (show/hide cards)
+       3. Scroll fade-up animations
+       4. Newsletter subscribe handler
+  ============================================= -->
+  <script>
+    // ---- 1. MOBILE MENU ----
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // ---- 2. CATEGORY FILTER ----
+    // Shows only cards matching the selected category.
+    // "all" shows everything.
+    function filterPosts(category, btn) {
+      // Update active pill styling
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Show/hide cards based on data-category attribute
+      document.querySelectorAll('#blogGrid .blog-card').forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Also handle featured card visibility
+      const featured = document.querySelector('.featured-card');
+      if (featured) {
+        if (category === 'all' || featured.dataset.category === category) {
+          featured.closest('section').style.display = 'block';
+        } else {
+          featured.closest('section').style.display = 'none';
+        }
+      }
+    }
+
+    // ---- 3. SCROLL ANIMATIONS ----
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ---- 4. NEWSLETTER SUBSCRIBE ----
+    function subscribeNewsletter() {
+      const email = document.getElementById('nlEmail').value;
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      document.getElementById('nlEmail').value = '';
+      alert('🎉 You\'re subscribed! Check your inbox for a welcome email.');
+    }
+  </script>
+
+</body>
+</html>
