@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Growth — Digital Business Growth Agency</title>
+
+  <!-- Google Fonts: Playfair Display (display/headlines) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES (Design Tokens)
+       All colors, spacing, and font sizes live here.
+       Change these to retheme the entire page.
+    ============================================= */
+    :root {
+      --bg-deep:    #0a0c12;
+      --bg-card:    #10131e;
+      --bg-surface: #161a28;
+      --gold:       #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim:   rgba(201,168,76,0.15);
+      --white:      #f4f2ee;
+      --muted:      #8a8fa8;
+      --border:     rgba(201,168,76,0.2);
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --radius:  12px;
+      --radius-lg: 20px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      --section-pad: clamp(80px, 10vw, 140px);
+      --container:   1200px;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Subtle animated grain texture overlay across the whole page */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Reusable container */
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: clamp(20px, 5vw, 60px);
+    }
+
+    /* Section label chip */
+    .section-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+      background: var(--gold-dim);
+    }
+
+    /* Section headings */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .section-title span { color: var(--gold); }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    /* CTA Button styles */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: #0a0c12;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 15px 32px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      letter-spacing: 0.02em;
+    }
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(201,168,76,0.3);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 14px 30px;
+      border-radius: 6px;
+      border: 1px solid rgba(244,242,238,0.25);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* Gold horizontal rule divider */
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin-bottom: 32px;
+      border-radius: 2px;
+    }
+
+    /* =============================================
+       NAVIGATION
+       Sticky top nav with logo and links.
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 20px 0;
+      background: rgba(10,12,18,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      transition: padding var(--transition);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Logo */
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--gold); }
+
+    /* Desktop nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    /* Mobile hamburger — hidden on desktop */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* Mobile nav drawer */
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      padding: 24px 0 16px;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+    .mobile-menu a {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-menu.open { display: flex; }
+
+    /* =============================================
+       HERO SECTION
+       Full-viewport dark hero with diagonal gold
+       accent line, headline, subtext, and two CTAs.
+    ============================================= */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background radial glow */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Diagonal decorative line */
+    .hero-line {
+      position: absolute;
+      top: 0; right: 20%;
+      width: 1px;
+      height: 100vh;
+      background: linear-gradient(180deg, transparent 0%, var(--gold) 40%, transparent 100%);
+      opacity: 0.25;
+      transform: rotate(15deg) translateX(100px);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 780px;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    .hero-eyebrow-line {
+      width: 40px; height: 1px;
+      background: var(--gold);
+    }
+    .hero-eyebrow-text {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 28px;
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 540px;
+      margin-bottom: 48px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* Floating stats bar below hero CTA */
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 80px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .stat-item {}
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .scroll-hint-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(180deg, var(--gold) 0%, transparent 100%);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* =============================================
+       INDUSTRIES SECTION
+       5-niche grid with icon cards and hover lift.
+    ============================================= */
+    #industries {
+      padding-block: var(--section-pad);
+      background: var(--bg-card);
+      position: relative;
+    }
+
+    /* Top-right decorative circle */
+    #industries::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .industries-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: end;
+      margin-bottom: 64px;
+    }
+
+    /* 5-column responsive grid */
+    .industries-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .industry-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 24px;
+      text-align: center;
+      cursor: default;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Gold bottom border on hover */
+    .industry-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transform: scaleX(0);
+      transition: transform var(--transition);
+    }
+    .industry-card:hover::after { transform: scaleX(1); }
+
+    .industry-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    }
+
+    .industry-icon {
+      font-size: 2.6rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .industry-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .industry-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* =============================================
+       SERVICES SECTION
+       3-column card layout with numbered index.
+    ============================================= */
+    #services {
+      padding-block: var(--section-pad);
+    }
+
+    .services-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .services-sticky {
+      position: sticky;
+      top: 120px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      transition: var(--transition);
+      position: relative;
+    }
+    .service-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+      transform: translateY(-4px);
+    }
+
+    .service-number {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .service-icon {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    .service-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .service-desc {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* =============================================
+       CASE STUDIES SECTION
+       Horizontal scrollable cards with results highlight.
+    ============================================= */
+    #case-studies {
+      padding-block: var(--section-pad);
+      background: var(--bg-card);
+      overflow: hidden;
+    }
+
+    .case-studies-header {
+      margin-bottom: 56px;
+    }
+
+    .case-studies-scroll {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .case-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .case-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-6px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    }
+
+    /* Colored top banner per card */
+    .case-banner {
+      height: 180px;
+      display: flex;
+      align-items: flex-end;
+      padding: 20px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .case-banner-1 { background: linear-gradient(135deg, #1a2a1a 0%, #0d1a0d 100%); }
+    .case-banner-2 { background: linear-gradient(135deg, #1a1a2e 0%, #0d0d1a 100%); }
+    .case-banner-3 { background: linear-gradient(135deg, #2a1a0d 0%, #1a0d00 100%); }
+
+    .case-banner-icon {
+      font-size: 3.5rem;
+      position: absolute;
+      top: 20px; right: 24px;
+      opacity: 0.35;
+    }
+
+    .case-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 50px;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .case-body {
+      padding: 28px;
+    }
+
+    .case-company {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .case-challenge {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    /* Results metrics */
+    .case-results {
+      display: flex;
+      gap: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .result-metric {}
+    .result-value {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .result-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* =============================================
+       TESTIMONIALS SECTION
+       3-column quote cards.
+    ============================================= */
+    #testimonials {
+      padding-block: var(--section-pad);
+    }
+
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .testimonials-header .section-sub {
+      margin-inline: auto;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      transition: var(--transition);
+      position: relative;
+    }
+    .testimonial-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    /* Big decorative quote mark */
+    .quote-mark {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      color: var(--gold);
+      opacity: 0.15;
+      line-height: 0.7;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: var(--white);
+      line-height: 1.75;
+      margin-bottom: 28px;
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    /* Star rating */
+    .stars {
+      color: var(--gold);
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .author-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .av-1 { background: linear-gradient(135deg, #c9a84c, #7a5c00); color: #000; }
+    .av-2 { background: linear-gradient(135deg, #4c7ac9, #003a7a); color: #fff; }
+    .av-3 { background: linear-gradient(135deg, #4cc97a, #007a3a); color: #000; }
+
+    .author-name {
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+    .author-title {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* =============================================
+       CONTACT SECTION
+       Two-column: info left, form right.
+    ============================================= */
+    #contact {
+      padding-block: var(--section-pad);
+      background: var(--bg-card);
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-info {}
+
+    .contact-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .contact-detail-icon {
+      font-size: 1.3rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .contact-detail-label {
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .contact-detail-value {
+      font-size: 0.95rem;
+      color: var(--white);
+    }
+
+    /* Contact form */
+    .contact-form {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 48px 44px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      appearance: none;
+    }
+
+    .form-group select option { background: var(--bg-card); }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(138,143,168,0.5);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 120px; }
+
+    /* Success message (hidden by default) */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .form-success-icon { font-size: 3rem; margin-bottom: 16px; }
+    .form-success h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    .form-success p { color: var(--muted); }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--bg-deep);
+      border-top: 1px solid var(--border);
+      padding-block: 64px 32px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+
+    .footer-brand {}
+    .footer-brand .logo { margin-bottom: 16px; }
+    .footer-brand p {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    /* Social icons */
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: var(--transition);
+    }
+    .social-link:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .footer-col h4 {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul a {
+      font-size: 0.88rem;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+    .footer-col ul a:hover { color: var(--white); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-legal a {
+      font-size: 0.82rem;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+    .footer-legal a:hover { color: var(--gold); }
+
+    /* =============================================
+       ANIMATIONS
+       Fade-up on scroll via IntersectionObserver
+    ============================================= */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Staggered delay helpers */
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+    .delay-5 { transition-delay: 0.5s; }
+
+    /* =============================================
+       RESPONSIVE — TABLET (max 1024px)
+    ============================================= */
+    @media (max-width: 1024px) {
+      .industries-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .services-layout {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .services-sticky { position: static; }
+
+      .case-studies-scroll {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .industries-header {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* =============================================
+       RESPONSIVE — MOBILE (max 768px)
+    ============================================= */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .hero-stats {
+        gap: 28px;
+      }
+
+      .industries-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .case-studies-scroll {
+        grid-template-columns: 1fr;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-form {
+        padding: 32px 24px;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-ctas {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* =============================================
+       RESPONSIVE — SMALL MOBILE (max 480px)
+    ============================================= */
+    @media (max-width: 480px) {
+      .industries-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .hero-stats {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAVIGATION
+       Fixed top bar with logo, links, and CTA.
+       Hamburger revealed on mobile.
+  ============================================= -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <!-- Company wordmark -->
+        <div class="logo">Apex<span>Growth</span></div>
+
+        <!-- Desktop navigation links -->
+        <ul class="nav-links">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#testimonials">About</a></li>
+          <li><a href="#case-studies">Blog</a></li>
+          <li><a href="#contact" class="btn-primary" style="padding: 10px 22px; font-size: 0.83rem;">Get Started</a></li>
+        </ul>
+
+        <!-- Mobile hamburger button (JS toggles .open class) -->
+        <div class="hamburger" onclick="toggleMenu()" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Mobile dropdown menu -->
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="#hero" onclick="toggleMenu()">Home</a>
+        <a href="#services" onclick="toggleMenu()">Services</a>
+        <a href="#testimonials" onclick="toggleMenu()">About</a>
+        <a href="#case-studies" onclick="toggleMenu()">Blog</a>
+        <a href="#contact" onclick="toggleMenu()">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- =============================================
+       HERO SECTION
+       Main above-the-fold. Headline, sub, two CTAs,
+       and a stats bar to establish credibility.
+  ============================================= -->
+  <section id="hero">
+    <!-- Decorative angled line (CSS positioned) -->
+    <div class="hero-line"></div>
+
+    <div class="container">
+      <div class="hero-content">
+
+        <!-- Eyebrow label -->
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-line"></div>
+          <span class="hero-eyebrow-text">Digital Growth Agency</span>
+        </div>
+
+        <!-- Primary headline with italic gold word -->
+        <h1 class="hero-headline">
+          We Scale<br />
+          <em>Ambitious</em><br />
+          Businesses.
+        </h1>
+
+        <!-- Supporting subtext -->
+        <p class="hero-sub">
+          Apex Growth is a full-service digital agency built for five high-growth industries.
+          We turn strategy into revenue — with data-driven marketing, elite branding,
+          and performance systems that compound over time.
+        </p>
+
+        <!-- Two call-to-action buttons -->
+        <div class="hero-ctas">
+          <a href="#contact" class="btn-primary">
+            Start Growing Today
+            <span>→</span>
+          </a>
+          <a href="#case-studies" class="btn-outline">
+            View Case Studies
+          </a>
+        </div>
+
+        <!-- Credibility stats row -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">$24M+</div>
+            <div class="stat-label">Revenue Generated</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">180+</div>
+            <div class="stat-label">Brands Scaled</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Focused Industries</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">97%</div>
+            <div class="stat-label">Client Retention</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Scroll hint animation -->
+    <div class="scroll-hint">
+      <div class="scroll-hint-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       INDUSTRIES WE SERVE SECTION
+       5 niche cards, each with an icon, name, and
+       a short description of how we serve them.
+  ============================================= -->
+  <section id="industries">
+    <div class="container">
+
+      <!-- Section header — two-column on desktop -->
+      <div class="industries-header">
+        <div class="fade-up">
+          <span class="section-label">Industries We Serve</span>
+          <h2 class="section-title">Built for<br /><span>Five Niches.</span><br />Mastered.</h2>
+        </div>
+        <div class="fade-up delay-1">
+          <p class="section-sub">
+            We don't work with everyone. We go deep into five specific industries where
+            our expertise creates an unfair advantage for our clients.
+          </p>
+        </div>
+      </div>
+
+      <!-- 5 Industry cards grid -->
+      <div class="industries-grid">
+
+        <!-- Card 1: Real Estate -->
+        <div class="industry-card fade-up delay-1">
+          <span class="industry-icon">🏢</span>
+          <div class="industry-name">Real Estate</div>
+          <p class="industry-desc">Agent branding, listing ads, lead funnels, and CRM automation for brokers and teams.</p>
+        </div>
+
+        <!-- Card 2: Fitness -->
+        <div class="industry-card fade-up delay-2">
+          <span class="industry-icon">💪</span>
+          <div class="industry-name">Fitness & Personal Training</div>
+          <p class="industry-desc">Client acquisition systems, social content, and booking funnels for trainers and gyms.</p>
+        </div>
+
+        <!-- Card 3: AI & Tech -->
+        <div class="industry-card fade-up delay-3">
+          <span class="industry-icon">🤖</span>
+          <div class="industry-name">AI & Tech Startups</div>
+          <p class="industry-desc">Go-to-market strategy, SEO, thought leadership, and growth infrastructure for tech founders.</p>
+        </div>
+
+        <!-- Card 4: Online Courses -->
+        <div class="industry-card fade-up delay-4">
+          <span class="industry-icon">🎓</span>
+          <div class="industry-name">Online Courses & Education</div>
+          <p class="industry-desc">Launch funnels, email sequences, paid traffic, and community growth for course creators.</p>
+        </div>
+
+        <!-- Card 5: Events -->
+        <div class="industry-card fade-up delay-5">
+          <span class="industry-icon">🎤</span>
+          <div class="industry-name">Events & Conferences</div>
+          <p class="industry-desc">Ticket sales campaigns, sponsorship decks, social buzz, and post-event retention loops.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       SERVICES SECTION
+       Sticky left panel + scrollable right grid.
+       6 service cards with icon, number, and desc.
+  ============================================= -->
+  <section id="services">
+    <div class="container">
+      <div class="services-layout">
+
+        <!-- Left sticky panel -->
+        <div class="services-sticky fade-up">
+          <span class="section-label">What We Do</span>
+          <h2 class="section-title">Every Service<br />You <span>Need.</span></h2>
+          <div class="divider"></div>
+          <p class="section-sub">
+            From brand strategy to paid performance, our integrated suite of services
+            works together to compound your growth every quarter.
+          </p>
+          <br /><br />
+          <a href="#contact" class="btn-primary">See Full Service List →</a>
+        </div>
+
+        <!-- Right scrollable service cards -->
+        <div class="services-grid">
+
+          <!-- Service 1 -->
+          <div class="service-card fade-up delay-1">
+            <div class="service-number">01</div>
+            <div class="service-icon">📈</div>
+            <div class="service-name">Paid Advertising</div>
+            <p class="service-desc">Meta, Google, TikTok, and YouTube campaigns engineered for maximum ROAS in your niche.</p>
+          </div>
+
+          <!-- Service 2 -->
+          <div class="service-card fade-up delay-2">
+            <div class="service-number">02</div>
+            <div class="service-icon">🔍</div>
+            <div class="service-name">SEO & Content</div>
+            <p class="service-desc">Long-term organic authority through keyword strategy, technical SEO, and editorial content.</p>
+          </div>
+
+          <!-- Service 3 -->
+          <div class="service-card fade-up delay-3">
+            <div class="service-number">03</div>
+            <div class="service-icon">🎨</div>
+            <div class="service-name">Brand Identity</div>
+            <p class="service-desc">Visual systems, positioning, messaging, and voice guides that make you unmistakable.</p>
+          </div>
+
+          <!-- Service 4 -->
+          <div class="service-card fade-up delay-4">
+            <div class="service-number">04</div>
+            <div class="service-icon">⚙️</div>
+            <div class="service-name">Funnel & CRO</div>
+            <p class="service-desc">High-converting landing pages, sales funnels, and A/B testing loops that print revenue.</p>
+          </div>
+
+          <!-- Service 5 -->
+          <div class="service-card fade-up delay-1">
+            <div class="service-number">05</div>
+            <div class="service-icon">📧</div>
+            <div class="service-name">Email & Automation</div>
+            <p class="service-desc">Lifecycle sequences, segmentation, and drip campaigns that nurture leads on autopilot.</p>
+          </div>
+
+          <!-- Service 6 -->
+          <div class="service-card fade-up delay-2">
+            <div class="service-number">06</div>
+            <div class="service-icon">📊</div>
+            <div class="service-name">Analytics & Reporting</div>
+            <p class="service-desc">Custom dashboards, attribution modeling, and monthly growth reports with real insights.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       CASE STUDIES SECTION
+       3 client success stories with industry tag,
+       challenge description, and result metrics.
+  ============================================= -->
+  <section id="case-studies">
+    <div class="container">
+
+      <!-- Header -->
+      <div class="case-studies-header fade-up">
+        <span class="section-label">Proof of Work</span>
+        <h2 class="section-title">Real Clients.<br /><span>Real Results.</span></h2>
+      </div>
+
+      <!-- 3 Case Study Cards -->
+      <div class="case-studies-scroll">
+
+        <!-- Case Study 1: Real Estate -->
+        <div class="case-card fade-up delay-1">
+          <div class="case-banner case-banner-1">
+            <span class="case-banner-icon">🏢</span>
+            <span class="case-tag">Real Estate</span>
+          </div>
+          <div class="case-body">
+            <div class="case-company">Meridian Realty Group</div>
+            <p class="case-challenge">
+              A 12-agent team struggling with inconsistent lead flow and high CPL on Facebook.
+              We rebuilt their entire digital strategy from the ground up.
+            </p>
+            <div class="case-results">
+              <div class="result-metric">
+                <div class="result-value">312%</div>
+                <div class="result-label">Lead Increase</div>
+              </div>
+              <div class="result-metric">
+                <div class="result-value">-61%</div>
+                <div class="result-label">Cost Per Lead</div>
+              </div>
+              <div class="result-metric">
+                <div class="result-value">$2.1M</div>
+                <div class="result-label">Extra Revenue</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study 2: Online Courses -->
+        <div class="case-card fade-up delay-2">
+          <div class="case-banner case-banner-2">
+            <span class="case-banner-icon">🎓</span>
+            <span class="case-tag">Online Education</span>
+          </div>
+          <div class="case-body">
+            <div class="case-company">NovaSkill Academy</div>
+            <p class="case-challenge">
+              A solo course creator with a great product but no system. We launched a
+              full-stack funnel and paid traffic strategy that 10x'd their monthly revenue.
+            </p>
+            <div class="case-results">
+              <div class="result-metric">
+                <div class="result-value">10x</div>
+                <div class="result-label">Revenue Growth</div>
+              </div>
+              <div class="result-metric">
+                <div class="result-value">4,200</div>
+                <div class="result-label">New Students</div>
+              </div>
+              <div class="result-metric">
+                <div class="result-value">68%</div>
+                <div class="result-label">Email Open Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study 3: AI Startup -->
+        <div class="case-card fade-up delay-3">
+          <div class="case-banner case-banner-3">
+            <span class="case-banner-icon">🤖</span>
+            <span class="case-tag">AI & Tech</span>
+          </div>
+          <div class="case-body">
+            <div class="case-company">Synapse AI</div>
+            <p class="case-challenge">
+              A Series-A startup needing brand authority and inbound pipeline fast.
+              We positioned them as thought leaders and built their content engine.
+            </p>
+            <div class="case-results">
+              <div class="result-metric">
+                <div class="result-value">580%</div>
+                <div class="result-label">Organic Traffic</div>
+              </div>
+              <div class="result-metric">
+                <div class="result-value">$800K</div>
+                <div class="result-label">Pipeline in 90 Days</div>
+              </div>
+              <div class="result-metric">
+                <div class="result-value">14</div>
+                <div class="result-label">Press Features</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       TESTIMONIALS SECTION
+       3 client quote cards with star rating,
+       quote text, and author attribution.
+  ============================================= -->
+  <section id="testimonials">
+    <div class="container">
+
+      <!-- Centered header -->
+      <div class="testimonials-header fade-up">
+        <span class="section-label">Client Love</span>
+        <h2 class="section-title">What Our Clients <span>Say</span></h2>
+        <p class="section-sub">Don't take our word for it. Here's what business owners across all five industries have experienced.</p>
+      </div>
+
+      <!-- 3-column testimonials grid -->
+      <div class="testimonials-grid">
+
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card fade-up delay-1">
+          <span class="quote-mark">"</span>
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">
+            Apex Growth didn't just run our ads — they rebuilt our entire client acquisition model.
+            We went from 3 closings a month to 11 within the first quarter. Incredible team.
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar av-1">JM</div>
+            <div>
+              <div class="author-name">James Mallory</div>
+              <div class="author-title">Broker-Owner, Meridian Realty Group</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card fade-up delay-2">
+          <span class="quote-mark">"</span>
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">
+            I had the course. I had no students. Three months with Apex and I had 4,200 paying
+            students and a waitlist. Their funnel system is unlike anything I've seen.
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar av-2">SR</div>
+            <div>
+              <div class="author-name">Sofia Reyes</div>
+              <div class="author-title">Founder, NovaSkill Academy</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="testimonial-card fade-up delay-3">
+          <span class="quote-mark">"</span>
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">
+            As a fitness coach, I was invisible online. Apex gave me a brand, a content system,
+            and a lead flow I can finally predict. My DMs are full of qualified clients every week.
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar av-3">DK</div>
+            <div>
+              <div class="author-name">Darius King</div>
+              <div class="author-title">Elite Performance Coach</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       CONTACT SECTION
+       Left column: contact details.
+       Right column: validated enquiry form.
+  ============================================= -->
+  <section id="contact">
+    <div class="container">
+
+      <div class="contact-layout">
+
+        <!-- Left info panel -->
+        <div class="fade-up">
+          <span class="section-label">Get In Touch</span>
+          <h2 class="section-title">Let's Build<br /><span>Something</span><br />Big.</h2>
+          <div class="divider"></div>
+          <p class="section-sub" style="margin-bottom: 48px;">
+            Ready to grow? Tell us about your business and we'll put together a
+            custom growth plan at no charge.
+          </p>
+
+          <!-- Contact detail items -->
+          <div class="contact-detail">
+            <span class="contact-detail-icon">📍</span>
+            <div>
+              <div class="contact-detail-label">Location</div>
+              <div class="contact-detail-value">New York, NY — Remote Worldwide</div>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <span class="contact-detail-icon">📧</span>
+            <div>
+              <div class="contact-detail-label">Email</div>
+              <div class="contact-detail-value">hello@apexgrowth.co</div>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <span class="contact-detail-icon">📞</span>
+            <div>
+              <div class="contact-detail-label">Phone</div>
+              <div class="contact-detail-value">+1 (212) 555-0194</div>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <span class="contact-detail-icon">🕐</span>
+            <div>
+              <div class="contact-detail-label">Response Time</div>
+              <div class="contact-detail-value">We reply within 24 business hours</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right contact form -->
+        <div class="fade-up delay-2">
+          <div class="contact-form">
+
+            <!-- The form itself -->
+            <div id="formContent">
+              <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 28px;">
+                Request a Free Growth Plan
+              </h3>
+
+              <!-- Name row: two columns -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input type="text" id="firstName" placeholder="Jane" />
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" id="lastName" placeholder="Doe" />
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="jane@company.com" />
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" placeholder="+1 (555) 000-0000" />
+              </div>
+
+              <!-- Industry dropdown -->
+              <div class="form-group">
+                <label for="industry">Your Industry</label>
+                <select id="industry">
+                  <option value="" disabled selected>Select your industry</option>
+                  <option>Real Estate</option>
+                  <option>Fitness & Personal Training</option>
+                  <option>AI & Tech Startup</option>
+                  <option>Online Courses & Digital Education</option>
+                  <option>Events & Conferences</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <!-- Message textarea -->
+              <div class="form-group">
+                <label for="message">Tell Us About Your Business</label>
+                <textarea id="message" placeholder="Describe your current situation and what you want to achieve..."></textarea>
+              </div>
+
+              <!-- Submit button — full width -->
+              <button class="btn-primary" onclick="handleSubmit()" style="width: 100%; justify-content: center; font-size: 1rem; padding: 18px;">
+                Send My Growth Request →
+              </button>
+            </div>
+
+            <!-- Success state shown after form submit -->
+            <div class="form-success" id="formSuccess">
+              <div class="form-success-icon">✅</div>
+              <h3>We Got It!</h3>
+              <p>Thank you for reaching out. Our team will review your submission and get back to you within 24 hours with a custom growth plan.</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       FOOTER
+       Brand column + 3 link columns + legal bar.
+  ============================================= -->
+  <footer>
+    <div class="container">
+
+      <!-- 4-column footer top -->
+      <div class="footer-top">
+
+        <!-- Brand + social -->
+        <div class="footer-brand">
+          <div class="logo">Apex<span>Growth</span></div>
+          <p>A specialist digital growth agency for five high-growth industries. We build systems that scale businesses beyond plateaus.</p>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="social-link" aria-label="Instagram">ig</a>
+            <a href="#" class="social-link" aria-label="YouTube">▶</a>
+          </div>
+        </div>
+
+        <!-- Services column -->
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#">Paid Advertising</a></li>
+            <li><a href="#">SEO & Content</a></li>
+            <li><a href="#">Brand Identity</a></li>
+            <li><a href="#">Funnel & CRO</a></li>
+            <li><a href="#">Email Automation</a></li>
+            <li><a href="#">Analytics</a></li>
+          </ul>
+        </div>
+
+        <!-- Industries column -->
+        <div class="footer-col">
+          <h4>Industries</h4>
+          <ul>
+            <li><a href="#">Real Estate</a></li>
+            <li><a href="#">Fitness & Training</a></li>
+            <li><a href="#">AI & Tech</a></li>
+            <li><a href="#">Online Courses</a></li>
+            <li><a href="#">Events</a></li>
+          </ul>
+        </div>
+
+        <!-- Company column -->
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Case Studies</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom legal bar -->
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2025 Apex Growth Agency. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- =============================================
+       JAVASCRIPT
+       1. Mobile nav toggle
+       2. Scroll-triggered fade-up animations
+       3. Form submit handler (demo)
+  ============================================= -->
+  <script>
+    // ---- 1. MOBILE MENU TOGGLE ----
+    // Toggles the .open class on the mobile nav drawer
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // ---- 2. SCROLL ANIMATIONS (IntersectionObserver) ----
+    // Watches all .fade-up elements; adds .visible when they enter the viewport.
+    // This triggers the CSS opacity + translateY transition.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Unobserve after animating so it only fires once
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 } // Fire when 12% of the element is visible
+    );
+
+    // Attach observer to every .fade-up element on the page
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ---- 3. FORM SUBMIT HANDLER (Demo) ----
+    // Hides the form and shows a success message on click.
+    // Replace this with a real form API (e.g. FormSubmit, Netlify Forms) in production.
+    function handleSubmit() {
+      const email = document.getElementById('email').value;
+      const firstName = document.getElementById('firstName').value;
+
+      // Basic validation: require name and email
+      if (!firstName || !email) {
+        alert('Please fill in at least your name and email address.');
+        return;
+      }
+
+      // Hide form, show success state
+      document.getElementById('formContent').style.display = 'none';
+      const success = document.getElementById('formSuccess');
+      success.style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
